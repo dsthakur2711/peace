@@ -1,0 +1,153 @@
+🧩 Max Area Rectangle in Binary Matrix
+
+Problem:
+
+Given a binary matrix (with elements as 0 or 1), find the maximum size rectangle that contains all 1’s.
+For example:
+
+Input:
+
+0 1 1 0  
+1 1 1 1  
+1 1 1 1  
+1 1 0 0
+
+Output (max area rectangle):
+
+1 1 1 1  
+1 1 1 1
+
+The area is 8 (2 rows × 4 columns).
+
+⸻
+
+Approach:
+
+This problem is an extension of the Largest Rectangle in Histogram problem. Here’s how we solve it:
+	1.	Treat each row like a histogram:
+	•	Build a heights array:
+	•	If the current cell is 1, increment the height by 1.
+	•	If it’s 0, reset height to 0.
+	2.	For each row:
+	•	Treat the heights array as a histogram.
+	•	Use the Largest Rectangle in Histogram logic to compute the max area at that row.
+	3.	Keep track of the maximum area across all rows.
+
+⸻
+
+Solution:
+
+#include <bits/stdc++.h>
+using namespace std;
+
+// Helper: NSL and NSR for Histogram
+vector<int> NSLIndex(vector<int>& arr) {
+    int n = arr.size();
+    vector<int> result(n);
+    stack<int> s;
+
+    for(int i = 0; i < n; i++) {
+        while(!s.empty() && arr[s.top()] >= arr[i]) {
+            s.pop();
+        }
+
+        if(s.empty()) {
+            result[i] = -1;
+        } else {
+            result[i] = s.top();
+        }
+
+        s.push(i);
+    }
+
+    return result;
+}
+
+vector<int> NSRIndex(vector<int>& arr) {
+    int n = arr.size();
+    vector<int> result(n);
+    stack<int> s;
+
+    for(int i = n-1; i >= 0; i--) {
+        while(!s.empty() && arr[s.top()] >= arr[i]) {
+            s.pop();
+        }
+
+        if(s.empty()) {
+            result[i] = n;
+        } else {
+            result[i] = s.top();
+        }
+
+        s.push(i);
+    }
+
+    return result;
+}
+
+// Largest Rectangle in Histogram (same as before)
+int largestRectangleArea(vector<int>& heights) {
+    vector<int> left = NSLIndex(heights);
+    vector<int> right = NSRIndex(heights);
+
+    int maxArea = 0;
+    for(int i = 0; i < heights.size(); i++) {
+        int width = right[i] - left[i] - 1;
+        int area = heights[i] * width;
+        maxArea = max(maxArea, area);
+    }
+
+    return maxArea;
+}
+
+// Max Area Rectangle in Binary Matrix
+int maxAreaRectangle(vector<vector<int>>& matrix) {
+    if(matrix.empty()) return 0;
+
+    int rows = matrix.size();
+    int cols = matrix[0].size();
+    vector<int> heights(cols, 0);
+    int maxArea = 0;
+
+    for(int i = 0; i < rows; i++) {
+        // Build histogram for current row
+        for(int j = 0; j < cols; j++) {
+            if(matrix[i][j] == 0) {
+                heights[j] = 0;
+            } else {
+                heights[j] += 1;
+            }
+        }
+
+        // Find max area for current histogram
+        maxArea = max(maxArea, largestRectangleArea(heights));
+    }
+
+    return maxArea;
+}
+
+int main() {
+    vector<vector<int>> matrix = {
+        {0, 1, 1, 0},
+        {1, 1, 1, 1},
+        {1, 1, 1, 1},
+        {1, 1, 0, 0}
+    };
+
+    cout << "Max Rectangle Area: " << maxAreaRectangle(matrix) << endl;
+    // Output: 8
+
+    return 0;
+}
+
+
+⸻
+
+Summary:
+
+✅ Convert the matrix into histograms row by row.
+✅ Use Largest Rectangle in Histogram logic on each row’s histogram.
+✅ Keep updating the maximum area.
+✅ Time Complexity: O(rows * cols) (since each row runs the histogram logic in O(cols)).
+
+Let me know if you want a dry run example for the matrix, or a diagram explanation bro! 🔥

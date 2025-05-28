@@ -1,0 +1,112 @@
+📊 Largest Rectangle in Histogram
+
+Problem:
+
+Given a histogram represented by an array arr[], where each element denotes the height of a bar (with all bars having width 1), find the largest rectangular area that can be formed by a number of contiguous bars.
+
+For example:
+	•	Input: [60, 20, 50, 40, 10, 50, 60]
+Output: 100
+	•	Input: [3, 5, 1, 7, 5, 9]
+Output: 15
+
+⸻
+
+Approach:
+	1.	Find the Next Smaller to Left (NSL) Index for each bar:
+	•	This tells us how far we can extend left for a rectangle.
+	2.	Find the Next Smaller to Right (NSR) Index for each bar:
+	•	This tells us how far we can extend right for a rectangle.
+	3.	For each bar:
+	•	Width = NSR[i] - NSL[i] - 1
+	•	Area = heights[i] * width
+	4.	Return the maximum area among all bars.
+
+⸻
+
+Solution:
+
+#include<bits/stdc++.h>
+using namespace std;
+
+// Helper: Next Smaller to Left indices
+vector<int> NSLIndex(vector<int>& arr) {
+    int n = arr.size();
+    vector<int> result(n);
+    stack<int> s;
+
+    for(int i = 0; i < n; i++) {
+        while(!s.empty() && arr[s.top()] >= arr[i]) {
+            s.pop();
+        }
+
+        if(s.empty()) {
+            result[i] = -1;
+        } else {
+            result[i] = s.top();
+        }
+
+        s.push(i);
+    }
+
+    return result;
+}
+
+// Helper: Next Smaller to Right indices
+vector<int> NSRIndex(vector<int>& arr) {
+    int n = arr.size();
+    vector<int> result(n);
+    stack<int> s;
+
+    for(int i = n-1; i >= 0; i--) {
+        while(!s.empty() && arr[s.top()] >= arr[i]) {
+            s.pop();
+        }
+
+        if(s.empty()) {
+            result[i] = n; // Out of bounds
+        } else {
+            result[i] = s.top();
+        }
+
+        s.push(i);
+    }
+
+    return result;
+}
+
+// Largest Rectangle in Histogram
+int largestRectangleArea(vector<int>& heights) {
+    vector<int> left = NSLIndex(heights);
+    vector<int> right = NSRIndex(heights);
+
+    int maxArea = 0;
+    for(int i = 0; i < heights.size(); i++) {
+        int width = right[i] - left[i] - 1;
+        int area = heights[i] * width;
+        maxArea = max(maxArea, area);
+    }
+
+    return maxArea;
+}
+
+int main() {
+    vector<int> arr1 = {60, 20, 50, 40, 10, 50, 60};
+    cout << "Max Area: " << largestRectangleArea(arr1) << endl; // Output: 100
+
+    vector<int> arr2 = {3, 5, 1, 7, 5, 9};
+    cout << "Max Area: " << largestRectangleArea(arr2) << endl; // Output: 15
+
+    return 0;
+}
+
+
+⸻
+
+Summary:
+	•	NSLIndex/NSRIndex help find the boundaries of the largest rectangle for each bar.
+	•	The final area is computed as:
+Area = height[i] * (NSR[i] - NSL[i] - 1)
+	•	The solution efficiently uses stacks to solve this in O(N) time.
+
+Let me know if you want dry run diagrams or step-by-step example explanations, bro! 🚀

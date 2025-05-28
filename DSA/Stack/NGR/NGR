@@ -1,0 +1,166 @@
+#include<bits/stdc++.h>
+
+using namespace std;
+
+// NGR - Next Greater to Right
+vector<int> NGR(vector<int>& arr) {
+    int n = arr.size();
+    vector<int> result(n);
+    stack<int> s;
+    
+    // Process array from right to left
+    for(int i = n-1; i >= 0; i--) {
+        // Pop elements from stack while they are smaller than current element
+        while(!s.empty() && s.top() <= arr[i]) {
+            s.pop();
+        }
+        
+        // If stack is empty, no greater element exists
+        if(s.empty()) {
+            result[i] = -1;
+        } else {
+            result[i] = s.top();
+        }
+        
+        // Push current element to stack
+        s.push(arr[i]);
+    }
+    
+    return result;
+}
+
+// NGL - Next Greater to Left
+vector<int> NGL(vector<int>& arr) {
+    int n = arr.size();
+    vector<int> result(n);
+    stack<int> s;
+    
+    // Process array from left to right
+    for(int i = 0; i < n; i++) {
+        // Pop elements from stack while they are smaller than current element
+        while(!s.empty() && s.top() <= arr[i]) {
+            s.pop();
+        }
+        
+        // If stack is empty, no greater element exists
+        if(s.empty()) {
+            result[i] = -1;
+        } else {
+            result[i] = s.top();
+        }
+        
+        // Push current element to stack
+        s.push(arr[i]);
+    }
+    
+    return result;
+}
+
+// NSL - Next Smaller to Left
+vector<int> NSL(vector<int>& arr) {
+    int n = arr.size();
+    vector<int> result(n);
+    stack<int> s;
+    
+    // Process array from left to right
+    for(int i = 0; i < n; i++) {
+        // Pop elements from stack while they are greater than current element
+        while(!s.empty() && s.top() >= arr[i]) {
+            s.pop();
+        }
+        
+        // If stack is empty, no smaller element exists
+        if(s.empty()) {
+            result[i] = -1;
+        } else {
+            result[i] = s.top();
+        }
+        
+        // Push current element to stack
+        s.push(arr[i]);
+    }
+    
+    return result;
+}
+
+// NSR - Next Smaller to Right
+vector<int> NSR(vector<int>& arr) {
+    int n = arr.size();
+    vector<int> result(n);
+    stack<int> s;
+    
+    // Process array from right to left
+    for(int i = n-1; i >= 0; i--) {
+        // Pop elements from stack while they are greater than current element
+        while(!s.empty() && s.top() >= arr[i]) {
+            s.pop();
+        }
+        
+        // If stack is empty, no smaller element exists
+        if(s.empty()) {
+            result[i] = -1;
+        } else {
+            result[i] = s.top();
+        }
+        
+        // Push current element to stack
+        s.push(arr[i]);
+    }
+    
+    return result;
+}
+
+/* 
+Other variations:
+
+1. NGL (Next Greater to Left)
+- Process array from left to right
+- Same logic as NGR but direction changes
+
+2. NSL (Next Smaller to Left)
+- Process array from left to right
+- Change comparison from <= to >=
+
+3. NSR (Next Smaller to Right)
+- Process array from right to left
+- Change comparison from <= to >=
+*/
+
+// Example usage
+int main() {
+    vector<int> arr = {4, 5, 2, 10, 8};
+    
+    // Test NGR
+    vector<int> ngr_result = NGR(arr);
+    cout << "Array: ";
+    for(int num : arr) cout << num << " ";
+    cout << "\nNGR:   ";
+    for(int num : ngr_result) cout << num << " ";
+    cout << "\n\n";
+    
+    // Test NGL
+    vector<int> ngl_result = NGL(arr);
+    cout << "Array: ";
+    for(int num : arr) cout << num << " ";
+    cout << "\nNGL:   ";
+    for(int num : ngl_result) cout << num << " ";
+    cout << "\n\n";
+    
+    // Test NSL
+    vector<int> nsl_result = NSL(arr);
+    cout << "Array: ";
+    for(int num : arr) cout << num << " ";
+    cout << "\nNSL:   ";
+    for(int num : nsl_result) cout << num << " ";
+    cout << "\n\n";
+    
+    // Test NSR
+    vector<int> nsr_result = NSR(arr);
+    cout << "Array: ";
+    for(int num : arr) cout << num << " ";
+    cout << "\nNSR:   ";
+    for(int num : nsr_result) cout << num << " ";
+    cout << endl;
+    
+    return 0;
+}
